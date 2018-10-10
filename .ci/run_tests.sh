@@ -13,7 +13,7 @@ pushd $DOWNLOAD_CACHE/kong
         export TEST_CMD="bin/busted $BUSTED_ARGS,postgres"
     fi
 
-    mkdir output
+    mkdir -p output
     if [ "$TEST_SUITE" == "integration" ]; then
         eval "$TEST_CMD" spec/02-integration/ | tee output/integration.txt
     fi
