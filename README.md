@@ -6,7 +6,7 @@ apply these patches to their OpenResty bundle.
 
 ## How to Apply Patches Manually?
 
-While Kong, Inc. takes care of pushing these patches to all the Kong
+While Kong Inc. takes care of pushing these patches to all the Kong
 Community Edition (CE) and Kong Enterprise Edition releases (in
 different flavors of distribution packages), you might want to [build
 Kong from the sources](https://getkong.org/install/source/), that currently
