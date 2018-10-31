@@ -1,7 +1,7 @@
 diff -ru a/nginx-1.13.6/src/core/ngx_connection.c b/nginx-1.13.6/src/core/ngx_connection.c
 --- a/nginx-1.13.6/src/core/ngx_connection.c	2017-10-26 16:42:53.000000000 +1100
 +++ b/nginx-1.13.6/src/core/ngx_connection.c	2018-08-02 15:22:53.652819986 +1000
-@@ -501,6 +501,49 @@
+@@ -501,6 +501,51 @@
              }
  #endif
 
@@ -27,12 +27,14 @@ diff -ru a/nginx-1.13.6/src/core/ngx_connection.c b/nginx-1.13.6/src/core/ngx_co
 +
 +                    break;
 +
-+#if (NGX_HAVE_INET6 && NGX_HAVE_IPV6_TRANSPARENT)
++#if (NGX_HAVE_INET6)
 +
 +                case AF_INET6:
 +
++#if NGX_HAVE_IPV6_TRANSPARENT
 +                    if (setsockopt(s, IPPROTO_IPV6, IPV6_TRANSPARENT,
 +                                   (const void *) &transparent, sizeof(int)) == -1)
++#endif
 +                    {
 +                        ngx_log_error(NGX_LOG_EMERG, log, ngx_socket_errno,
 +                                      "setsockopt(IPV6_TRANSPARENT) %V failed",
