@@ -47,8 +47,11 @@ cache:
   apt: true
   pip: true
   directories:
-    - $DOWNLOAD_CACHE
-    - $INSTALL_CACHE
+    - $OPENSSL_DOWNLOAD
+    - $LUAROCKS_DOWNLOAD
+    - $CPAN_DOWNLOAD
+    - $OPENSSL_INSTALL
+    - $LUAROCKS_INSTALL
     - $HOME/.ccm/repository
 
 stages:
