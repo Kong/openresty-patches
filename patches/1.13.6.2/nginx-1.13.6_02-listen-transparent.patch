@@ -27,7 +27,7 @@ diff -ru a/nginx-1.13.6/src/core/ngx_connection.c b/nginx-1.13.6/src/core/ngx_co
 +
 +                    break;
 +
-+#if (NGX_HAVE_INET6)
++#if (NGX_HAVE_INET6 && NGX_HAVE_IPV6_TRANSPARENT)
 +
 +                case AF_INET6:
 +
@@ -211,3 +211,38 @@ diff -ru a/nginx-1.13.6/src/stream/ngx_stream_handler.c b/nginx-1.13.6/src/strea
 
          /*
           * There are several addresses on this port and one of them
+diff -ru a/nginx-1.13.6/auto/os/linux b/nginx-1.13.6/auto/os/linux
+--- a/nginx-1.13.6/auto/os/linux	2018-05-14 17:24:38.000000000 -0300
++++ b/nginx-1.13.6/auto/os/linux	2018-10-31 12:20:12.343502288 -0300
+@@ -176,3 +176,16 @@
+ CC_AUX_FLAGS="$cc_aux_flags -D_GNU_SOURCE -D_FILE_OFFSET_BITS=64"
+ 
+ DTRACE_FROM_SYSTEMTAP=YES
++
++
++# IPV6_TRANSPARENT
++
++ngx_feature="IPV6_TRANSPARENT"
++ngx_feature_name="NGX_HAVE_IPV6_TRANSPARENT"
++ngx_feature_run=no
++ngx_feature_incs="#include <linux/in6.h>"
++ngx_feature_path=
++ngx_feature_libs=
++ngx_feature_test="int optname = IPV6_TRANSPARENT;
++                  (void) optname"
++. auto/feature
+diff -ru a/nginx-1.13.6/src/os/unix/ngx_linux_config.h b/nginx-1.13.6/src/os/unix/ngx_linux_config.h
+--- a/nginx-1.13.6/src/os/unix/ngx_linux_config.h	2018-10-31 12:26:52.689485871 -0300
++++ b/nginx-1.13.6/src/os/unix/ngx_linux_config.h	2018-10-31 12:26:55.439485758 -0300
+@@ -117,6 +117,11 @@
+ #define ngx_debug_init()
+ 
+ 
++#if (NGX_HAVE_IPV6_TRANSPARENT)
++#include <linux/in6.h>
++#endif
++
++
+ extern char **environ;
+ 
+ 
