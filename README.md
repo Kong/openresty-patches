@@ -181,6 +181,9 @@ patching file ngx_stream_lua-0.0.5/src/ngx_stream_lua_log.h
 patching file ngx_stream_lua-0.0.5/src/ngx_stream_lua_log_ringbuf.c
 patching file ngx_stream_lua-0.0.5/src/ngx_stream_lua_log_ringbuf.h
 patching file ngx_stream_lua-0.0.5/src/ngx_stream_lua_module.c
+patching file ngx_stream_lua-0.0.5/src/ngx_stream_lua_ssl.c
+patching file ngx_stream_lua-0.0.5/src/ngx_stream_lua_ssl.h
+patching file ngx_stream_lua-0.0.5/src/ngx_stream_lua_util.cq
 ```
 
 Here are the instructions on how to build OpenResty with patches added to
