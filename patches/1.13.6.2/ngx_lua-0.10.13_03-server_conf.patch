@@ -1,6 +1,6 @@
 --- a/ngx_lua-0.10.13/src/ngx_http_lua_util.c	2018-04-22 11:41:56.000000000 -0700
 +++ b/ngx_lua-0.10.13/src/ngx_http_lua_util.c	2018-12-06 21:38:23.407566881 -0800
-@@ -4129,4 +4129,31 @@
+@@ -4129,4 +4129,38 @@
  }
 
 
@@ -15,6 +15,13 @@
 +        return NULL;
 +
 +    return ((ngx_http_core_srv_conf_t**)cmcf->servers.elts)[i];
++}
++
++
++ngx_str_t*
++ngx_http_lua_server_block_server_name(ngx_http_core_srv_conf_t* http_srv_conf)
++{
++    return &http_srv_conf->server_name;
 +}
 +
 +
