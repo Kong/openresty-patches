@@ -11,7 +11,7 @@
 +
 +    cmcf = ngx_http_cycle_get_module_main_conf(ngx_cycle, ngx_http_core_module);
 +
-+    if (i > cmcf->servers.nelts)
++    if (i >= cmcf->servers.nelts)
 +        return NULL;
 +
 +    return ((ngx_http_core_srv_conf_t**)cmcf->servers.elts)[i];
