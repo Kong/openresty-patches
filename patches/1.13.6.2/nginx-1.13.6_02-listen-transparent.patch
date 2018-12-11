@@ -236,15 +236,17 @@ diff -ru a/nginx-1.13.6/auto/os/linux b/nginx-1.13.6/auto/os/linux
 diff -ru a/nginx-1.13.6/src/os/unix/ngx_linux_config.h b/nginx-1.13.6/src/os/unix/ngx_linux_config.h
 --- a/nginx-1.13.6/src/os/unix/ngx_linux_config.h	2018-10-31 12:26:52.689485871 -0300
 +++ b/nginx-1.13.6/src/os/unix/ngx_linux_config.h	2018-10-31 12:26:55.439485758 -0300
-@@ -42,7 +42,6 @@
+@@ -42,9 +42,7 @@
  #include <sched.h>
  
  #include <sys/socket.h>
 -#include <netinet/in.h>
  #include <netinet/tcp.h>        /* TCP_NODELAY, TCP_CORK */
- #include <arpa/inet.h>
+-#include <arpa/inet.h>
  #include <netdb.h>
-@@ -61,6 +60,14 @@
+ #include <sys/un.h>
+ 
+@@ -61,6 +59,15 @@
  #include <ngx_auto_config.h>
  
  
@@ -254,9 +256,9 @@ diff -ru a/nginx-1.13.6/src/os/unix/ngx_linux_config.h b/nginx-1.13.6/src/os/uni
 +
 +
 +#include <netinet/in.h>
++#include <arpa/inet.h>
 +
 +
  #if (NGX_HAVE_POSIX_SEM)
  #include <semaphore.h>
  #endif
-
