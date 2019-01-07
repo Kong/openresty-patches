@@ -61,6 +61,8 @@ patching file nginx-1.13.6/src/stream/ngx_stream.c
 patching file nginx-1.13.6/src/stream/ngx_stream_core_module.c
 patching file nginx-1.13.6/src/stream/ngx_stream.h
 patching file nginx-1.13.6/src/stream/ngx_stream_handler.c
+patching file nginx-1.13.6/auto/os/linux
+patching file nginx-1.13.6/src/os/unix/ngx_linux_config.h
 patching file nginx-1.13.6/src/event/ngx_event_openssl.c
 patching file nginx-1.13.6/src/event/ngx_event_openssl.c
 patching file nginx-1.13.6/src/event/ngx_event_openssl.h
@@ -70,6 +72,7 @@ patching file ngx_lua-0.10.13/src/ngx_http_lua_balancer.c
 patching file ngx_lua-0.10.13/src/ngx_http_lua_balancer.c
 patching file ngx_lua-0.10.13/src/ngx_http_lua_ssl_certby.c
 patching file ngx_lua-0.10.13/t/140-ssl-c-api.t
+patching file ngx_lua-0.10.13/src/ngx_http_lua_util.c
 patching file ngx_stream_lua-0.0.5/src/ngx_stream_lua_balancer.c
 patching file ngx_stream_lua-0.0.5/src/ngx_stream_lua_util.h
 patching file ngx_stream_lua-0.0.5/src/ngx_stream_lua_control.c
@@ -183,7 +186,7 @@ patching file ngx_stream_lua-0.0.5/src/ngx_stream_lua_log_ringbuf.h
 patching file ngx_stream_lua-0.0.5/src/ngx_stream_lua_module.c
 patching file ngx_stream_lua-0.0.5/src/ngx_stream_lua_ssl.c
 patching file ngx_stream_lua-0.0.5/src/ngx_stream_lua_ssl.h
-patching file ngx_stream_lua-0.0.5/src/ngx_stream_lua_util.cq
+patching file ngx_stream_lua-0.0.5/src/ngx_stream_lua_util.c
 ```
 
 Here are the instructions on how to build OpenResty with patches added to
