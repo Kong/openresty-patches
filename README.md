@@ -243,6 +243,7 @@ $ ./configure \
     --with-http_stub_status_module \
     --with-http_v2_module \
     --with-stream_ssl_preread_module \
+    --with-stream_realip_module \
     --with-luajit-xcflags="-DLUAJIT_NUMMODE=2" \
     -j8 \
     … 
