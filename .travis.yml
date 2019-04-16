@@ -132,5 +132,5 @@ script:
   - dig +short @$TEST_NGINX_RESOLVER openresty.org || exit 0
   - dig +short @$TEST_NGINX_RESOLVER agentzh.org || exit 0
   - cd  ../lua-nginx-module
-  - git cherry-pick cf887654a2ac36b6747c54a11f50ca56f88d6dbd
+  - patch -p1 < openresty-patches/patches/tests/1.13.6.2/0001-tests-switched-to-127.0.0.2-instead-of-agentzh.org-f.patch
   - prove -Itest-nginx/lib -r t
