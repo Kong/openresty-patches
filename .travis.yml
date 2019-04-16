@@ -133,4 +133,5 @@ script:
   - cd  ../lua-nginx-module
   - patch -p1 < ../openresty-patches/patches/lua-nginx-module-tests/1.13.6.2/0001-tests-switched-to-127.0.0.2-instead-of-agentzh.org-f.patch
   - patch -p1 < ../openresty-patches/patches/lua-nginx-module-tests/1.13.6.2/0002-tests-fixed-failures-due-to-recent-CDN-changes.patch
+  - patch -p1 < ../openresty-patches/patches/lua-nginx-module-tests/1.13.6.2/0003-tests-fixed-the-tests-using-iscribblet.org-which-wou.patch
   - prove -Itest-nginx/lib -r t
