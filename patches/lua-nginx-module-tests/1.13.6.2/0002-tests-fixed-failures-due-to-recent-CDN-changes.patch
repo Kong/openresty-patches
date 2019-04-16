@@ -1,0 +1,141 @@
+From 78206b1027d81f0db97ed0c442543848616c4cac Mon Sep 17 00:00:00 2001
+From: Thibault Charbonnier <thibaultcha@me.com>
+Date: Tue, 26 Feb 2019 16:48:40 -0800
+Subject: [PATCH] tests: fixed failures due to recent CDN changes.
+
+---
+ t/023-rewrite/tcp-socket.t   | 6 +++---
+ t/023-rewrite/uthread-exit.t | 4 ++--
+ t/024-access/uthread-exit.t  | 4 ++--
+ t/058-tcp-socket.t           | 6 +++---
+ t/094-uthread-exit.t         | 4 ++--
+ t/124-init-worker.t          | 7 +++----
+ 6 files changed, 15 insertions(+), 16 deletions(-)
+
+diff --git a/t/023-rewrite/tcp-socket.t b/t/023-rewrite/tcp-socket.t
+index 37f86507..86a1794b 100644
+--- a/t/023-rewrite/tcp-socket.t
++++ b/t/023-rewrite/tcp-socket.t
+@@ -250,11 +250,11 @@ attempt to send data on a closed socket:
+     }
+ --- request
+ GET /t
+---- response_body
++--- response_body_like
+ connected: 1
+ request sent: 56
+-first line received: HTTP/1.1 200 OK
+-second line received: Server: openresty
++first line received: HTTP\/1\.1 200 OK
++second line received: (?:Date|Server): .*?
+ --- no_error_log
+ [error]
+ 
+diff --git a/t/023-rewrite/uthread-exit.t b/t/023-rewrite/uthread-exit.t
+index fe9db07b..5e255877 100644
+--- a/t/023-rewrite/uthread-exit.t
++++ b/t/023-rewrite/uthread-exit.t
+@@ -298,7 +298,7 @@ exiting the user thread
+ === TEST 5: exit in user thread (entry thread is still pending on the DNS resolver for ngx.socket.tcp)
+ --- config
+     location /lua {
+-        resolver agentzh.org;
++        resolver 127.0.0.2:12345;
+         resolver_timeout 12s;
+         rewrite_by_lua '
+             function f()
+@@ -403,7 +403,7 @@ after
+ === TEST 6: exit in user thread (entry thread is still pending on the DNS resolver for ngx.socket.udp)
+ --- config
+     location /lua {
+-        resolver agentzh.org;
++        resolver 127.0.0.2:12345;
+         #resolver 127.0.0.1;
+         resolver_timeout 12s;
+         rewrite_by_lua '
+diff --git a/t/024-access/uthread-exit.t b/t/024-access/uthread-exit.t
+index de8f539d..bd57b898 100644
+--- a/t/024-access/uthread-exit.t
++++ b/t/024-access/uthread-exit.t
+@@ -298,7 +298,7 @@ exiting the user thread
+ === TEST 5: exit in user thread (entry thread is still pending on the DNS resolver for ngx.socket.tcp)
+ --- config
+     location /lua {
+-        resolver agentzh.org;
++        resolver 127.0.0.2:12345;
+         resolver_timeout 12s;
+         access_by_lua '
+             function f()
+@@ -394,7 +394,7 @@ after
+ === TEST 6: exit in user thread (entry thread is still pending on the DNS resolver for ngx.socket.udp)
+ --- config
+     location /lua {
+-        resolver agentzh.org;
++        resolver 127.0.0.2:12345;
+         resolver_timeout 12s;
+         access_by_lua '
+             function f()
+diff --git a/t/058-tcp-socket.t b/t/058-tcp-socket.t
+index 2df1ed1f..670eb55e 100644
+--- a/t/058-tcp-socket.t
++++ b/t/058-tcp-socket.t
+@@ -245,11 +245,11 @@ attempt to send data on a closed socket:
+ 
+ --- request
+ GET /t
+---- response_body
++--- response_body_like
+ connected: 1
+ request sent: 56
+-first line received: HTTP/1.1 200 OK
+-second line received: Server: openresty
++first line received: HTTP\/1\.1 200 OK
++second line received: (?:Date|Server): .*?
+ --- no_error_log
+ [error]
+ --- timeout: 10
+diff --git a/t/094-uthread-exit.t b/t/094-uthread-exit.t
+index 3f683a39..bc26c4b2 100644
+--- a/t/094-uthread-exit.t
++++ b/t/094-uthread-exit.t
+@@ -297,7 +297,7 @@ exiting the user thread
+ === TEST 5: exit in user thread (entry thread is still pending on the DNS resolver for ngx.socket.tcp)
+ --- config
+     location /lua {
+-        resolver agentzh.org;
++        resolver 127.0.0.2:12345;
+         resolver_timeout 12s;
+         content_by_lua '
+             function f()
+@@ -393,7 +393,7 @@ after
+ === TEST 6: exit in user thread (entry thread is still pending on the DNS resolver for ngx.socket.udp)
+ --- config
+     location /lua {
+-        resolver agentzh.org;
++        resolver 127.0.0.2:12345;
+         resolver_timeout 12s;
+         content_by_lua '
+             function f()
+diff --git a/t/124-init-worker.t b/t/124-init-worker.t
+index 9b2a91fc..0c4e98cf 100644
+--- a/t/124-init-worker.t
++++ b/t/124-init-worker.t
+@@ -521,12 +521,11 @@ warn(): Thu, 01 Jan 1970 01:34:38 GMT
+     }
+ --- request
+ GET /t
+---- response_body
+-timer created
++--- response_body_like
+ connected: 1
+ request sent: 56
+-first line received: HTTP/1.1 200 OK
+-second line received: Server: openresty
++first line received: HTTP\/1\.1 200 OK
++second line received: (?:Date|Server): .*?
+ --- no_error_log
+ [error]
+ --- timeout: 10
+-- 
+2.20.1
+

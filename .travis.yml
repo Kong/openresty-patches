@@ -131,5 +131,6 @@ script:
   - dig +short @$TEST_NGINX_RESOLVER openresty.org || exit 0
   - dig +short @$TEST_NGINX_RESOLVER agentzh.org || exit 0
   - cd  ../lua-nginx-module
-  - patch -p1 < ../openresty-patches/patches/tests/1.13.6.2/0001-tests-switched-to-127.0.0.2-instead-of-agentzh.org-f.patch
+  - patch -p1 < ../openresty-patches/patches/lua-nginx-module-tests/1.13.6.2/0001-tests-switched-to-127.0.0.2-instead-of-agentzh.org-f.patch
+  - patch -p1 < ../openresty-patches/patches/lua-nginx-module-tests/1.13.6.2/0002-tests-fixed-failures-due-to-recent-CDN-changes.patch
   - prove -Itest-nginx/lib -r t
