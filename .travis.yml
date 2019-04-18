@@ -1,7 +1,7 @@
-dist: trusty
+dist: xenial
 sudo: false
 
-language: java
+language: generic
 
 jdk:
   - oraclejdk8
@@ -24,11 +24,11 @@ addons:
 env:
   global:
     - LUAROCKS=3.0.4
-    - OPENSSL=1.1.1a
+    - OPENSSL=1.1.1b
     - OPENRESTY_BASE=1.13.6.2
     - OPENRESTY_LATEST=1.13.6.2
     - OPENRESTY=$OPENRESTY_BASE
-    - DOWNLOAD_CACHE=$HOME/download-cache
+    - DOWNLOAD_ROOT=$HOME/download-root
     - INSTALL_CACHE=$HOME/install-cache
     - KONG_TEST_PG_DATABASE=travis
     - KONG_TEST_PG_USER=postgres
@@ -37,6 +37,7 @@ env:
     - KONG_TEST_DATABASE=postgres TEST_SUITE=integration
     - KONG_TEST_DATABASE=cassandra CASSANDRA=2.2 TEST_SUITE=integration
     - KONG_TEST_DATABASE=cassandra CASSANDRA=3.9 TEST_SUITE=integration
+    - KONG_TEST_DATABASE=off TEST_SUITE=dbless
     - KONG_TEST_DATABASE=postgres TEST_SUITE=plugins
     - KONG_TEST_DATABASE=cassandra CASSANDRA=2.2 TEST_SUITE=plugins
     - KONG_TEST_DATABASE=cassandra CASSANDRA=3.9 TEST_SUITE=plugins
@@ -44,29 +45,27 @@ env:
 
 install:
   - source .ci/setup_env.sh
+  - git clone https://github.com/Kong/kong.git
+  - cd kong && make dev
 
 cache:
   apt: true
   pip: true
   directories:
-    - $OPENSSL_DOWNLOAD
-    - $LUAROCKS_DOWNLOAD
-    - $CPAN_DOWNLOAD
-    - $OPENSSL_INSTALL
-    - $LUAROCKS_INSTALL
+    - $INSTALL_CACHE
     - $HOME/.ccm/repository
 
 stages:
   - lint and unit
+  - test
 
 jobs:
   include:
     - stage: lint and unit
       script:
-      - pushd $KONG_DOWNLOAD && luacheck -q . && popd
-      - pushd $KONG_DOWNLOAD && bin/busted -v -o gtest spec/01-unit && popd
+      - luacheck -q .
+      - bin/busted -v -o gtest spec/01-unit
       env:
         - KONG_DATABASE=none
-
 script:
   - .ci/run_tests.sh

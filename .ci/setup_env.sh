@@ -1,107 +1,38 @@
 #!/usr/bin/env bash
-set -e
+# set -e
 
 #---------
 # Download
 #---------
-OPENSSL_DOWNLOAD=$DOWNLOAD_CACHE/openssl-$OPENSSL
-OPENRESTY_DOWNLOAD=$DOWNLOAD_CACHE/openresty-$OPENRESTY
-LUAROCKS_DOWNLOAD=$DOWNLOAD_CACHE/luarocks-$LUAROCKS
-CPAN_DOWNLOAD=$DOWNLOAD_CACHE/cpanm
-KONG_DOWNLOAD=$DOWNLOAD_CACHE/kong
 
-mkdir -p $OPENSSL_DOWNLOAD $OPENRESTY_DOWNLOAD $LUAROCKS_DOWNLOAD $CPAN_DOWNLOAD $KONG_DOWNLOAD
+DEPS_HASH=$(cat .ci/setup_env.sh .travis.yml | md5sum | awk '{ print $1 }')
+BUILD_TOOLS_DOWNLOAD=$DOWNLOAD_ROOT/openresty-build-tools
 
-if [ ! "$(ls -A $OPENSSL_DOWNLOAD)" ]; then
-  pushd $DOWNLOAD_CACHE
-    curl -s -S -L http://www.openssl.org/source/openssl-$OPENSSL.tar.gz | tar xz
-  popd
-fi
+mkdir -p $BUILD_TOOLS_DOWNLOAD
 
-if [ ! "$(ls -A $OPENRESTY_DOWNLOAD)" ]; then
-  pushd $DOWNLOAD_CACHE
-    curl -s -S -L https://openresty.org/download/openresty-$OPENRESTY.tar.gz | tar xz
-  popd
-fi
+wget -O $BUILD_TOOLS_DOWNLOAD/kong-ngx-build https://raw.githubusercontent.com/Kong/openresty-build-tools/master/kong-ngx-build
+chmod +x $BUILD_TOOLS_DOWNLOAD/kong-ngx-build
 
-if [ ! "$(ls -A $LUAROCKS_DOWNLOAD)" ]; then
-  git clone -q https://github.com/keplerproject/luarocks.git $LUAROCKS_DOWNLOAD
-fi
-
-if [ ! "$(ls -A $CPAN_DOWNLOAD)" ]; then
-  wget -O $CPAN_DOWNLOAD/cpanm https://cpanmin.us
-fi
-
-if [ ! "$(ls -A $KONG_DOWNLOAD)" ]; then
-  git clone -q https://github.com/Kong/kong.git $KONG_DOWNLOAD
-fi
+export PATH=$BUILD_TOOLS_DOWNLOAD:$PATH
 
 #--------
 # Install
 #--------
-OPENSSL_INSTALL=$INSTALL_CACHE/openssl-$OPENSSL
-OPENRESTY_INSTALL=$INSTALL_CACHE/openresty-$OPENRESTY
-LUAROCKS_INSTALL=$INSTALL_CACHE/luarocks-$LUAROCKS
+INSTALL_ROOT=$INSTALL_CACHE/$DEPS_HASH
+OPENRESTY_PATCHES_DOWNLOAD=$DOWNLOAD_ROOT/openresty-patches-master
 
-mkdir -p $OPENSSL_INSTALL $OPENRESTY_INSTALL $LUAROCKS_INSTALL
+mkdir -p $OPENRESTY_PATCHES_DOWNLOAD
+cp -r $TRAVIS_BUILD_DIR/* $OPENRESTY_PATCHES_DOWNLOAD/
 
-if [ ! "$(ls -A $OPENSSL_INSTALL)" ]; then
-  pushd $OPENSSL_DOWNLOAD
-    echo "Installing OpenSSL $OPENSSL..."
-    ./config shared --prefix=$OPENSSL_INSTALL &> build.log || (cat build.log && exit 1)
-    make &> build.log || (cat build.log && exit 1)
-    make install_sw &> build.log || (cat build.log && exit 1)
-  popd
-fi
+kong-ngx-build -p $INSTALL_ROOT --work $DOWNLOAD_ROOT --openresty $OPENRESTY --openssl $OPENSSL --luarocks $LUAROCKS -j $JOBS
 
-if [ ! "$(ls -A $OPENRESTY_INSTALL)" ]; then
-  OPENRESTY_OPTS=(
-    "--prefix=$OPENRESTY_INSTALL"
-    "--with-cc-opt='-I$OPENSSL_INSTALL/include'"
-    "--with-ld-opt='-L$OPENSSL_INSTALL/lib -Wl,-rpath,$OPENSSL_INSTALL/lib'"
-    "--with-pcre-jit"
-    "--with-http_ssl_module"
-    "--with-http_realip_module"
-    "--with-http_stub_status_module"
-    "--with-http_v2_module"
-    "--with-stream_ssl_preread_module"
-    "--with-stream_realip_module"
-  )
-
-  pushd $OPENRESTY_DOWNLOAD
-    if [ -d $TRAVIS_BUILD_DIR/patches/$OPENRESTY ]; then
-      pushd bundle
-        for patch_file in $(ls -1 $TRAVIS_BUILD_DIR/patches/$OPENRESTY/*.patch); do
-          echo "Applying OpenResty patch $patch_file"
-          patch -p1 < $patch_file 2> build.log || (cat build.log && exit 1)
-        done
-      popd
-    fi
-    echo "Installing OpenResty $OPENRESTY..."
-    eval ./configure ${OPENRESTY_OPTS[*]} &> build.log || (cat build.log && exit 1)
-    make &> build.log || (cat build.log && exit 1)
-    make install &> build.log || (cat build.log && exit 1)
-  popd
-fi
-
-if [ ! "$(ls -A $LUAROCKS_INSTALL)" ]; then
-  pushd $LUAROCKS_DOWNLOAD
-    echo "Installing LuaRocks $LUAROCKS..."
-    git checkout -q v$LUAROCKS
-    ./configure \
-      --prefix=$LUAROCKS_INSTALL \
-      --lua-suffix=jit \
-      --with-lua=$OPENRESTY_INSTALL/luajit \
-      --with-lua-include=$OPENRESTY_INSTALL/luajit/include/luajit-2.1 \
-      &> build.log || (cat build.log && exit 1)
-    make build &> build.log || (cat build.log && exit 1)
-    make install &> build.log || (cat build.log && exit 1)
-  popd
-fi
+OPENSSL_INSTALL=$INSTALL_ROOT/openssl
+OPENRESTY_INSTALL=$INSTALL_ROOT/openresty
+LUAROCKS_INSTALL=$INSTALL_ROOT/luarocks
 
 export OPENSSL_DIR=$OPENSSL_INSTALL # for LuaSec install
 
-export PATH=$OPENSSL_INSTALL/bin:$OPENRESTY_INSTALL/nginx/sbin:$OPENRESTY_INSTALL/bin:$LUAROCKS_INSTALL/bin:$CPAN_DOWNLOAD:$PATH
+export PATH=$OPENSSL_INSTALL/bin:$OPENRESTY_INSTALL/nginx/sbin:$OPENRESTY_INSTALL/bin:$LUAROCKS_INSTALL/bin:$PATH
 export LD_LIBRARY_PATH=$OPENSSL_INSTALL/lib:$LD_LIBRARY_PATH # for openssl's CLI invoked in the test suite
 
 eval `luarocks path`
@@ -119,16 +50,16 @@ fi
 # Install Test::Nginx
 # -------------------
 if [[ "$TEST_SUITE" == "pdk" ]]; then
-  echo "Installing CPAN dependencies..."
+  CPAN_DOWNLOAD=$DOWNLOAD_ROOT/cpanm
+  mkdir -p $CPAN_DOWNLOAD
+  wget -O $CPAN_DOWNLOAD/cpanm https://cpanmin.us
   chmod +x $CPAN_DOWNLOAD/cpanm
+  export PATH=$CPAN_DOWNLOAD:$PATH
+
+  echo "Installing CPAN dependencies..."
   cpanm --notest Test::Nginx &> build.log || (cat build.log && exit 1)
   cpanm --notest --local-lib=$TRAVIS_BUILD_DIR/perl5 local::lib && eval $(perl -I $TRAVIS_BUILD_DIR/perl5/lib/perl5/ -Mlocal::lib)
 fi
-
-pushd $KONG_DOWNLOAD
-  make dev
-  bin/kong version -vv
-popd
 
 nginx -V
 resty -V
