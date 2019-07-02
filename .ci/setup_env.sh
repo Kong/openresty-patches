@@ -126,6 +126,8 @@ if [[ "$TEST_SUITE" == "pdk" ]]; then
 fi
 
 pushd $KONG_DOWNLOAD
+  git fetch
+  git reset --hard origin/$KONG_BRANCH
   make dev
   bin/kong version -vv
 popd

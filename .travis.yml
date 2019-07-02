@@ -23,9 +23,10 @@ addons:
 
 env:
   global:
-    - LUAROCKS=3.1.2
+    - OPENRESTY=1.13.6.2
+    - KONG_BRANCH=master
     - OPENSSL=1.1.1c
-    - OPENRESTY=1.15.8.1
+    - LUAROCKS=3.1.2
     - DOWNLOAD_CACHE=$HOME/download-cache
     - INSTALL_CACHE=$HOME/install-cache
     - KONG_TEST_PG_DATABASE=travis
@@ -39,6 +40,13 @@ env:
     - KONG_TEST_DATABASE=cassandra CASSANDRA=2.2 TEST_SUITE=plugins
     - KONG_TEST_DATABASE=cassandra CASSANDRA=3.9 TEST_SUITE=plugins
     - TEST_SUITE=pdk
+    - OPENRESTY=1.15.8.1 KONG_BRANCH=next KONG_TEST_DATABASE=postgres TEST_SUITE=integration
+    - OPENRESTY=1.15.8.1 KONG_BRANCH=next KONG_TEST_DATABASE=cassandra CASSANDRA=2.2 TEST_SUITE=integration
+    - OPENRESTY=1.15.8.1 KONG_BRANCH=next KONG_TEST_DATABASE=cassandra CASSANDRA=3.9 TEST_SUITE=integration
+    - OPENRESTY=1.15.8.1 KONG_BRANCH=next KONG_TEST_DATABASE=postgres TEST_SUITE=plugins
+    - OPENRESTY=1.15.8.1 KONG_BRANCH=next KONG_TEST_DATABASE=cassandra CASSANDRA=2.2 TEST_SUITE=plugins
+    - OPENRESTY=1.15.8.1 KONG_BRANCH=next KONG_TEST_DATABASE=cassandra CASSANDRA=3.9 TEST_SUITE=plugins
+    - OPENRESTY=1.15.8.1 KONG_BRANCH=next TEST_SUITE=pdk
 
 install:
   - source .ci/setup_env.sh
