@@ -18,6 +18,58 @@ get them applied to other versions:
 
 * `1.13.6.1`
 * `1.13.6.2`
+* `1.15.8.1`
+
+Here are the instructions on how to build OpenResty with patches added to
+OpenResty version `1.15.8.1`:
+```bash
+wget https://openresty.org/download/openresty-1.15.8.1.tar.gz
+tar zxvf openresty-1.15.8.1.tar.gz
+wget https://github.com/Kong/openresty-patches/archive/master.tar.gz
+tar zxvf master.tar.gz
+cd openresty-1.15.8.1/bundle
+for i in ../../openresty-patches-master/patches/1.15.8.1/*.patch; do patch -p1 < $i; done
+```
+And the output should contain:
+
+```bash
+patching file LuaJIT-2.1-20190507/src/lj_tab.c
+patching file LuaJIT-2.1-20190507/src/lj_asm_arm.h
+patching file lua-resty-core-0.1.17/lib/ngx/balancer.lua
+patching file lua-resty-core-0.1.17/lib/ngx/ssl.lua
+patching file nginx-1.15.8/src/stream/ngx_stream.h
+patching file nginx-1.15.8/src/stream/ngx_stream_proxy_module.c
+patching file nginx-1.15.8/src/core/ngx_connection.c
+patching file nginx-1.15.8/src/core/ngx_connection.h
+patching file nginx-1.15.8/src/event/ngx_event_accept.c
+patching file nginx-1.15.8/src/http/ngx_http.c
+patching file nginx-1.15.8/src/http/ngx_http_core_module.c
+patching file nginx-1.15.8/src/http/ngx_http_core_module.h
+patching file nginx-1.15.8/src/http/ngx_http_request.c
+patching file nginx-1.15.8/src/stream/ngx_stream.c
+patching file nginx-1.15.8/src/stream/ngx_stream_core_module.c
+patching file nginx-1.15.8/src/stream/ngx_stream.h
+patching file nginx-1.15.8/src/stream/ngx_stream_handler.c
+patching file nginx-1.15.8/auto/os/linux
+patching file nginx-1.15.8/src/os/unix/ngx_linux_config.h
+patching file nginx-1.15.8/src/event/ngx_event_openssl.c
+patching file nginx-1.15.8/src/event/ngx_event_openssl.c
+patching file nginx-1.15.8/src/event/ngx_event_openssl.h
+patching file ngx_lua-0.10.15/src/ngx_http_lua_balancer.c
+patching file ngx_lua-0.10.15/src/ngx_http_lua_balancer.c
+patching file ngx_lua-0.10.15/src/ngx_http_lua_ssl_certby.c
+patching file ngx_lua-0.10.15/t/140-ssl-c-api.t
+patching file ngx_lua-0.10.15/src/ngx_http_lua_util.c
+patching file ngx_stream_lua-0.0.7/src/ngx_stream_lua_balancer.c
+patching file ngx_stream_lua-0.0.7/src/ngx_stream_lua_util.h
+patching file ngx_stream_lua-0.0.7/src/ngx_stream_lua_control.c
+patching file ngx_stream_lua-0.0.7/src/ngx_stream_lua_variable.c
+patching file ngx_stream_lua-0.0.7/src/ngx_stream_lua_common.h
+patching file ngx_stream_lua-0.0.7/src/ngx_stream_lua_util.c
+patching file ngx_stream_lua-0.0.7/src/ngx_stream_lua_ssl.c
+patching file ngx_stream_lua-0.0.7/src/ngx_stream_lua_ssl.h
+patching file ngx_stream_lua-0.0.7/src/ngx_stream_lua_util.c
+```
 
 Here are the instructions on how to build OpenResty with patches added to
 OpenResty version `1.13.6.2`:
@@ -214,12 +266,12 @@ patching file ngx_lua-0.10.11/t/140-ssl-c-api.t
 
 After applying patches you can continue following [build Kong from sources documentation](https://getkong.org/install/source/):
 
-**NOTE!** `1.13.6.1` will only build with `OpenSSL` `1.0.x`, and `1.13.6.2`
-requires `OpenSSL` `1.1.x` when these patches are applied. Please adjust
-the following to point to correct `OpenSSL` as needed, e.g.:
+**NOTE!** `1.13.6.1` will only build with `OpenSSL` `1.0.x`, while `1.13.6.2`
+and `1.15.8.1` require `OpenSSL` `1.1.x` when these patches are applied. Please
+adjust the following to point to correct `OpenSSL` as needed, e.g.:
 
 
-**1.13.6.2:**
+**1.13.6.2 or 1.15.8.1:**
 ```
 --with-cc-opt="-I/usr/local/share/openssl@1.1/include"
 --with-ld-opt="-L/usr/local/share/openssl@1.1/lib"
