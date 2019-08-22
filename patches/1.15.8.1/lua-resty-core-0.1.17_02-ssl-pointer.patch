@@ -20,7 +20,7 @@ index 3484908..daf0de2 100644
      void ngx_http_lua_ffi_free_cert(void *cdata);
 
      void ngx_http_lua_ffi_free_priv_key(void *cdata);
-@@ -383,6 +385,21 @@ function _M.set_priv_key(priv_key)
+@@ -380,6 +382,21 @@ function _M.set_priv_key(priv_key)
  end
 
 

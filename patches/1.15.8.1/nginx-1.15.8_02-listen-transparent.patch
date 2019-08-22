@@ -1,7 +1,7 @@
 diff -ru a/nginx-1.15.8/src/core/ngx_connection.c b/nginx-1.15.8/src/core/ngx_connection.c
 --- a/nginx-1.15.8/src/core/ngx_connection.c	2017-10-26 16:42:53.000000000 +1100
 +++ b/nginx-1.15.8/src/core/ngx_connection.c	2018-08-02 15:22:53.652819986 +1000
-@@ -501,6 +501,51 @@
+@@ -560,6 +560,51 @@
              }
  #endif
 
@@ -56,7 +56,7 @@ diff -ru a/nginx-1.15.8/src/core/ngx_connection.c b/nginx-1.15.8/src/core/ngx_co
 diff -ru a/nginx-1.15.8/src/core/ngx_connection.h b/nginx-1.15.8/src/core/ngx_connection.h
 --- a/nginx-1.15.8/src/core/ngx_connection.h	2017-10-26 16:42:53.000000000 +1100
 +++ b/nginx-1.15.8/src/core/ngx_connection.h	2018-08-02 13:57:14.579715578 +1000
-@@ -71,6 +71,10 @@
+@@ -74,6 +74,10 @@
  #endif
      unsigned            reuseport:1;
      unsigned            add_reuseport:1;
@@ -70,7 +70,7 @@ diff -ru a/nginx-1.15.8/src/core/ngx_connection.h b/nginx-1.15.8/src/core/ngx_co
 diff -ru a/nginx-1.15.8/src/event/ngx_event_accept.c b/nginx-1.15.8/src/event/ngx_event_accept.c
 --- a/nginx-1.15.8/src/event/ngx_event_accept.c	2018-05-15 06:24:38.000000000 +1000
 +++ b/nginx-1.15.8/src/event/ngx_event_accept.c	2018-08-02 15:11:02.332851640 +1000
-@@ -232,6 +232,13 @@
+@@ -227,6 +227,13 @@
          c->local_sockaddr = ls->sockaddr;
          c->local_socklen = ls->socklen;
 
@@ -87,7 +87,7 @@ diff -ru a/nginx-1.15.8/src/event/ngx_event_accept.c b/nginx-1.15.8/src/event/ng
 diff -ru a/nginx-1.15.8/src/http/ngx_http.c b/nginx-1.15.8/src/http/ngx_http.c
 --- a/nginx-1.15.8/src/http/ngx_http.c	2018-05-15 06:24:38.000000000 +1000
 +++ b/nginx-1.15.8/src/http/ngx_http.c	2018-08-02 13:59:39.696375794 +1000
-@@ -1776,6 +1776,10 @@
+@@ -1772,6 +1772,10 @@
      ls->reuseport = addr->opt.reuseport;
  #endif
 
@@ -101,7 +101,7 @@ diff -ru a/nginx-1.15.8/src/http/ngx_http.c b/nginx-1.15.8/src/http/ngx_http.c
 diff -ru a/nginx-1.15.8/src/http/ngx_http_core_module.c b/nginx-1.15.8/src/http/ngx_http_core_module.c
 --- a/nginx-1.15.8/src/http/ngx_http_core_module.c	2018-05-15 06:24:38.000000000 +1000
 +++ b/nginx-1.15.8/src/http/ngx_http_core_module.c	2018-08-02 14:03:29.763032192 +1000
-@@ -3952,6 +3952,18 @@
+@@ -3986,6 +3986,18 @@
              continue;
          }
 
@@ -136,7 +136,7 @@ diff -ru a/nginx-1.15.8/src/http/ngx_http_core_module.h b/nginx-1.15.8/src/http/
 diff -ru a/nginx-1.15.8/src/http/ngx_http_request.c b/nginx-1.15.8/src/http/ngx_http_request.c
 --- a/nginx-1.15.8/src/http/ngx_http_request.c	2018-05-15 06:24:38.000000000 +1000
 +++ b/nginx-1.15.8/src/http/ngx_http_request.c	2018-08-02 15:08:29.969525091 +1000
-@@ -226,7 +226,11 @@
+@@ -230,7 +230,11 @@
 
      port = c->listening->servers;
 
@@ -165,7 +165,7 @@ diff -ru a/nginx-1.15.8/src/stream/ngx_stream.c b/nginx-1.15.8/src/stream/ngx_st
 diff -ru a/nginx-1.15.8/src/stream/ngx_stream_core_module.c b/nginx-1.15.8/src/stream/ngx_stream_core_module.c
 --- a/nginx-1.15.8/src/stream/ngx_stream_core_module.c	2017-10-26 16:42:53.000000000 +1100
 +++ b/nginx-1.15.8/src/stream/ngx_stream_core_module.c	2018-08-02 14:29:10.122963611 +1000
-@@ -732,6 +732,18 @@
+@@ -738,6 +738,18 @@
              continue;
          }
 
@@ -183,7 +183,7 @@ diff -ru a/nginx-1.15.8/src/stream/ngx_stream_core_module.c b/nginx-1.15.8/src/s
 +
          if (ngx_strcmp(value[i].data, "ssl") == 0) {
  #if (NGX_STREAM_SSL)
-             ls->ssl = 1;
+             ngx_stream_ssl_conf_t  *sslcf;
 diff -ru a/nginx-1.15.8/src/stream/ngx_stream.h b/nginx-1.15.8/src/stream/ngx_stream.h
 --- a/nginx-1.15.8/src/stream/ngx_stream.h	2018-05-15 06:24:38.000000000 +1000
 +++ b/nginx-1.15.8/src/stream/ngx_stream.h	2018-08-02 14:24:16.022976681 +1000
@@ -216,9 +216,9 @@ diff -ru a/nginx-1.15.8/src/stream/ngx_stream_handler.c b/nginx-1.15.8/src/strea
 diff -ru a/nginx-1.15.8/auto/os/linux b/nginx-1.15.8/auto/os/linux
 --- a/nginx-1.15.8/auto/os/linux	2018-05-14 17:24:38.000000000 -0300
 +++ b/nginx-1.15.8/auto/os/linux	2018-10-31 12:20:12.343502288 -0300
-@@ -176,3 +176,16 @@
+@@ -210,3 +210,16 @@
  CC_AUX_FLAGS="$cc_aux_flags -D_GNU_SOURCE -D_FILE_OFFSET_BITS=64"
- 
+
  DTRACE_FROM_SYSTEMTAP=YES
 +
 +
@@ -238,18 +238,18 @@ diff -ru a/nginx-1.15.8/src/os/unix/ngx_linux_config.h b/nginx-1.15.8/src/os/uni
 +++ b/nginx-1.15.8/src/os/unix/ngx_linux_config.h	2018-10-31 12:26:55.439485758 -0300
 @@ -42,9 +42,7 @@
  #include <sched.h>
- 
+
  #include <sys/socket.h>
 -#include <netinet/in.h>
  #include <netinet/tcp.h>        /* TCP_NODELAY, TCP_CORK */
 -#include <arpa/inet.h>
  #include <netdb.h>
  #include <sys/un.h>
- 
+
 @@ -61,6 +59,15 @@
  #include <ngx_auto_config.h>
- 
- 
+
+
 +#if (NGX_HAVE_IPV6_TRANSPARENT)
 +#include <linux/in6.h>
 +#endif

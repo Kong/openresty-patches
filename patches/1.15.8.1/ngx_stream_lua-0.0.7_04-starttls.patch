@@ -242,7 +242,7 @@ diff --git a/ngx_stream_lua-0.0.7/src/ngx_stream_lua_util.c b/ngx_stream_lua-0.0
 index f47a574..954457d 100644
 --- a/ngx_stream_lua-0.0.7/src/ngx_stream_lua_util.c
 +++ b/ngx_stream_lua-0.0.7/src/ngx_stream_lua_util.c
-@@ -1871,11 +1871,14 @@ ngx_stream_lua_inject_req_api(ngx_log_t *log, lua_State *L)
+@@ -1950,11 +1950,14 @@ ngx_stream_lua_inject_req_api(ngx_log_t *log, lua_State *L)
  {
      /* ngx.req table */
 

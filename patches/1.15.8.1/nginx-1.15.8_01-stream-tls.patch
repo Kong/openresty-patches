@@ -24,7 +24,7 @@ diff --git a/nginx-1.15.8/src/stream/ngx_stream_proxy_module.c b/nginx-1.15.8/sr
 index 9d4b075f..3b592534 100644
 --- a/nginx-1.15.8/src/stream/ngx_stream_proxy_module.c
 +++ b/nginx-1.15.8/src/stream/ngx_stream_proxy_module.c
-@@ -393,6 +393,7 @@ ngx_stream_proxy_handler(ngx_stream_session_t *s)
+@@ -405,6 +405,7 @@ ngx_stream_proxy_handler(ngx_stream_session_t *s)
      }
 
      s->upstream = u;
@@ -32,7 +32,7 @@ index 9d4b075f..3b592534 100644
 
      s->log_handler = ngx_stream_proxy_log_error;
 
-@@ -774,7 +776,7 @@ ngx_stream_proxy_init_upstream(ngx_stream_session_t *s)
+@@ -799,7 +801,7 @@ ngx_stream_proxy_init_upstream(ngx_stream_session_t *s)
 
  #if (NGX_STREAM_SSL)
 
@@ -41,7 +41,7 @@ index 9d4b075f..3b592534 100644
 
          if (u->proxy_protocol) {
              if (ngx_stream_proxy_send_proxy_protocol(s) != NGX_OK) {
-@@ -1024,7 +1026,7 @@ ngx_stream_proxy_ssl_init_connection(ngx_stream_session_t *s)
+@@ -1041,7 +1043,7 @@ ngx_stream_proxy_ssl_init_connection(ngx_stream_session_t *s)
 
      pscf = ngx_stream_get_module_srv_conf(s, ngx_stream_proxy_module);
 

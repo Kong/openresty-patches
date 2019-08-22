@@ -9,17 +9,17 @@ index 90710557..539a4db9 100644
 +#if (NGX_HTTP_LUA_KONG)
 +#include <ngx_http_lua_kong_module.h>
 +#endif
- 
- 
+
+
  #if (NGX_HTTP_CACHE)
-@@ -1707,6 +1710,10 @@ ngx_http_upstream_ssl_init_connection(ngx_http_request_t *r,
+@@ -1719,6 +1722,10 @@ ngx_http_upstream_ssl_init_connection(ngx_http_request_t *r,
          }
      }
- 
+
 +#if (NGX_HTTP_LUA_KONG)
 +    ngx_http_lua_kong_set_upstream_ssl(r, c);
 +#endif
 +
      r->connection->log->action = "SSL handshaking to upstream";
- 
+
      rc = ngx_ssl_handshake(c);

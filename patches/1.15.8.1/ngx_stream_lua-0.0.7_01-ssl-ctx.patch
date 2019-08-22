@@ -13,7 +13,7 @@ diff --git a/ngx_stream_lua-0.0.7/src/ngx_stream_lua_balancer.c b/ngx_stream_lua
 index 6b18b59..b1e846f 100644
 --- a/ngx_stream_lua-0.0.7/src/ngx_stream_lua_balancer.c
 +++ b/ngx_stream_lua-0.0.7/src/ngx_stream_lua_balancer.c
-@@ -741,3 +741,74 @@ ngx_stream_lua_ffi_balancer_get_last_failure(ngx_stream_lua_request_t *r,
+@@ -752,3 +752,74 @@ ngx_stream_lua_ffi_balancer_get_last_failure(ngx_stream_lua_request_t *r,
      return bp->last_peer_state;
  }
 
@@ -92,7 +92,7 @@ diff --git a/ngx_stream_lua-0.0.7/src/ngx_stream_lua_util.h b/ngx_stream_lua-0.0
 index 49be95b..bcc4dde 100644
 --- a/ngx_stream_lua-0.0.7/src/ngx_stream_lua_util.h
 +++ b/ngx_stream_lua-0.0.7/src/ngx_stream_lua_util.h
-@@ -125,6 +125,10 @@ ngx_stream_lua_ffi_check_context(ngx_stream_lua_ctx_t *ctx,
+@@ -138,6 +138,10 @@ ngx_stream_lua_ffi_check_context(ngx_stream_lua_ctx_t *ctx,
  #define ngx_stream_lua_ssl_get_ctx(ssl_conn)                                 \
      SSL_get_ex_data(ssl_conn, ngx_stream_lua_ssl_ctx_index)
 

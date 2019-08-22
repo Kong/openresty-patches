@@ -12,7 +12,7 @@ diff --git a/ngx_stream_lua-0.0.7/src/ngx_stream_lua_util.c b/ngx_stream_lua-0.0
 index 313a8f4..f47a574 100644
 --- a/ngx_stream_lua-0.0.7/src/ngx_stream_lua_util.c
 +++ b/ngx_stream_lua-0.0.7/src/ngx_stream_lua_util.c
-@@ -1868,6 +1868,7 @@ ngx_stream_lua_inject_req_api(ngx_log_t *log, lua_State *L)
+@@ -1955,6 +1955,7 @@ ngx_stream_lua_inject_req_api(ngx_log_t *log, lua_State *L)
      lua_pushcfunction(L, ngx_stream_lua_req_socket);
      lua_setfield(L, -2, "socket");
 

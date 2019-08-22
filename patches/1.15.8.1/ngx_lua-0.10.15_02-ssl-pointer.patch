@@ -12,7 +12,7 @@ diff --git a/ngx_lua-0.10.15/src/ngx_http_lua_ssl_certby.c b/ngx_lua-0.10.14/src
 index 453a5c78..310ca214 100644
 --- a/ngx_lua-0.10.15/src/ngx_http_lua_ssl_certby.c
 +++ b/ngx_lua-0.10.15/src/ngx_http_lua_ssl_certby.c
-@@ -1319,6 +1319,17 @@ failed:
+@@ -1321,6 +1321,17 @@ failed:
  }
 
 
@@ -48,7 +48,7 @@ diff --git a/ngx_lua-0.10.15/t/140-ssl-c-api.t b/t/140-ssl-c-api.t
 index 8734d147..b1d9d230 100644
 --- a/ngx_lua-0.10.15/t/140-ssl-c-api.t
 +++ b/ngx_lua-0.10.15/t/140-ssl-c-api.t
-@@ -57,6 +57,8 @@ ffi.cdef[[
+@@ -58,6 +58,8 @@ ffi.cdef[[
      int ngx_http_lua_ffi_set_priv_key(void *r,
          void *cdata, char **err);
 
@@ -57,7 +57,7 @@ index 8734d147..b1d9d230 100644
      void ngx_http_lua_ffi_free_cert(void *cdata);
 
      void ngx_http_lua_ffi_free_priv_key(void *cdata);
-@@ -811,3 +813,123 @@ lua ssl server name: "test.com"
+@@ -812,3 +814,123 @@ lua ssl server name: "test.com"
  --- no_error_log
  [error]
  [alert]

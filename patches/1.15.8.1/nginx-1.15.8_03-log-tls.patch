@@ -12,7 +12,7 @@ diff --git a/nginx-1.15.8/src/event/ngx_event_openssl.c b/nginx-1.15.8/src/event
 index 88a6dbed..e90690d3 100644
 --- a/nginx-1.15.8/src/event/ngx_event_openssl.c
 +++ b/nginx-1.15.8/src/event/ngx_event_openssl.c
-@@ -1189,6 +1189,10 @@ ngx_ssl_create_connection(ngx_ssl_t *ssl, ngx_connection_t *c, ngx_uint_t flags)
+@@ -1293,6 +1293,10 @@ ngx_ssl_create_connection(ngx_ssl_t *ssl, ngx_connection_t *c, ngx_uint_t flags)
          return NGX_ERROR;
      }
 
