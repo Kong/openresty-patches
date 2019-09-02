@@ -1,4 +1,4 @@
-From e71f822df50745a6f3cc732b204c80ceb244285c Mon Sep 17 00:00:00 2001
+From 22945d38da972613a171231ba16f7c759d4512a1 Mon Sep 17 00:00:00 2001
 From: Javier Guerra <javier.guerra@konghq.com>
 Date: Tue, 13 Aug 2019 05:05:17 -0700
 Subject: [PATCH] Dynamic remapping of lightuserdata values
@@ -11,12 +11,12 @@ section.  It should also be a symetric mapping, so a repeat of the transformatio
 The `luv_init_map()` function uses a sample of different types of pointers to determine with sections are actually
 used, and constructs the required table.
 ---
- src/lj_api.c   |  5 ++--
+ src/lj_api.c   |  5 +--
  src/lj_arch.h  |  1 +
  src/lj_cconv.c |  2 +-
- src/lj_obj.h   | 15 ++++++++++
- src/lj_state.c | 81 ++++++++++++++++++++++++++++++++++++++++++++++++++
- 5 files changed, 101 insertions(+), 3 deletions(-)
+ src/lj_obj.h   | 15 +++++++++
+ src/lj_state.c | 85 ++++++++++++++++++++++++++++++++++++++++++++++++++
+ 5 files changed, 105 insertions(+), 3 deletions(-)
 
 diff --git a/LuaJIT-2.1-20190507/src/lj_api.c b/LuaJIT-2.1-20190507/src/lj_api.c
 index 9c4864d..0a3f778 100644
@@ -100,10 +100,10 @@ index a89ea0d..77a157b 100644
  {
  #if LJ_GC64
 diff --git a/LuaJIT-2.1-20190507/src/lj_state.c b/LuaJIT-2.1-20190507/src/lj_state.c
-index a0fba2a..77890f5 100644
+index a0fba2a..1ab3097 100644
 --- a/LuaJIT-2.1-20190507/src/lj_state.c
 +++ b/LuaJIT-2.1-20190507/src/lj_state.c
-@@ -29,6 +29,86 @@
+@@ -29,6 +29,90 @@
  #include "lj_alloc.h"
  #include "luajit.h"
  
@@ -128,9 +128,11 @@ index a0fba2a..77890f5 100644
 +
 +static void luvmap_fold(void)
 +{
-+  for (int i = 0; i < 8; ++i) {
++  int i, j;
++
++  for (i = 0; i < 8; ++i) {
 +    if (luv_sect_map[i] == 128) {		/* needed but invalid */
-+      for (int j = 3; j >= 0; --j) {
++      for (j = 3; j >= 0; --j) {
 +	if (luv_sect_map[j] == 255) {		/* found unused, swap */
 +	  luv_sect_map[i] = j;
 +	  luv_sect_map[j] = i;
@@ -140,7 +142,7 @@ index a0fba2a..77890f5 100644
 +    }
 +  }
 +
-+  for (int i = 0; i < 8; ++i) {
++  for (i = 0; i < 8; ++i) {
 +    if (luv_sect_map[i] == 128)
 +      abort();		/* unfixed section */
 +
@@ -150,10 +152,12 @@ index a0fba2a..77890f5 100644
 +}
 +
 +static void luv_init_map() {
++  int i;
++
 +  if (checked_layout != 0)
 +    return;
 +
-+  for (int i = 0; i < 8; ++i)
++  for (i = 0; i < 8; ++i)
 +    luv_sect_map[i] = 255;
 +
 +  char unused_local = 0;
@@ -190,7 +194,7 @@ index a0fba2a..77890f5 100644
  /* -- Stack handling ------------------------------------------------------ */
  
  /* Stack sizes. */
-@@ -186,6 +266,7 @@ lua_State *lj_state_newstate(lua_Alloc f, void *ud)
+@@ -186,6 +270,7 @@ lua_State *lj_state_newstate(lua_Alloc f, void *ud)
  LUA_API lua_State *lua_newstate(lua_Alloc f, void *ud)
  #endif
  {
