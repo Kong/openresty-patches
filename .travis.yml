@@ -1,7 +1,7 @@
-dist: trusty
+dist: xenial
 sudo: false
 
-language: java
+language: generic
 
 jdk:
   - oraclejdk8
@@ -20,17 +20,16 @@ addons:
       - net-tools
       - libpcre3-dev
       - build-essential
+  hosts:
+    - grpcs_1.test
+    - grpcs_2.test
 
 env:
   global:
-    - OPENRESTY=1.13.6.2
-    - KONG_BRANCH=master
-    - KONG_NGINX_MODULE_BRANCH=master
-    - OPENSSL=1.1.1c
-    - LUAROCKS=3.1.2
-    - DOWNLOAD_ROOT=$HOME/download-root
-    - DOWNLOAD_CACHE=$HOME/download-cache
+    - KONG=master
+    - OPENRESTY_PATCHES_BRANCH=$TRAVIS_BRANCH
     - INSTALL_CACHE=$HOME/install-cache
+    - DOWNLOAD_ROOT=$HOME/download-root
     - KONG_TEST_PG_DATABASE=travis
     - KONG_TEST_PG_USER=postgres
     - JOBS=2
@@ -38,31 +37,16 @@ env:
     - KONG_TEST_DATABASE=postgres TEST_SUITE=integration
     - KONG_TEST_DATABASE=cassandra CASSANDRA=2.2 TEST_SUITE=integration
     - KONG_TEST_DATABASE=cassandra CASSANDRA=3.9 TEST_SUITE=integration
+    - KONG_TEST_DATABASE=off TEST_SUITE=dbless
     - KONG_TEST_DATABASE=postgres TEST_SUITE=plugins
     - KONG_TEST_DATABASE=cassandra CASSANDRA=2.2 TEST_SUITE=plugins
     - KONG_TEST_DATABASE=cassandra CASSANDRA=3.9 TEST_SUITE=plugins
     - TEST_SUITE=pdk
-    - OPENRESTY=1.15.8.1 KONG_BRANCH=next KONG_TEST_DATABASE=postgres TEST_SUITE=integration
-    - OPENRESTY=1.15.8.1 KONG_BRANCH=next KONG_TEST_DATABASE=cassandra CASSANDRA=2.2 TEST_SUITE=integration
-    - OPENRESTY=1.15.8.1 KONG_BRANCH=next KONG_TEST_DATABASE=cassandra CASSANDRA=3.9 TEST_SUITE=integration
-    - OPENRESTY=1.15.8.1 KONG_BRANCH=next KONG_TEST_DATABASE=postgres TEST_SUITE=plugins
-    - OPENRESTY=1.15.8.1 KONG_BRANCH=next KONG_TEST_DATABASE=cassandra CASSANDRA=2.2 TEST_SUITE=plugins
-    - OPENRESTY=1.15.8.1 KONG_BRANCH=next KONG_TEST_DATABASE=cassandra CASSANDRA=3.9 TEST_SUITE=plugins
-    - OPENRESTY=1.15.8.1 KONG_BRANCH=next TEST_SUITE=pdk
 
 install:
-  - source .ci/setup_env.sh
-
-cache:
-  apt: true
-  pip: true
-  directories:
-    - $OPENSSL_DOWNLOAD
-    - $LUAROCKS_DOWNLOAD
-    - $CPAN_DOWNLOAD
-    - $OPENSSL_INSTALL
-    - $LUAROCKS_INSTALL
-    - $HOME/.ccm/repository
+  - make setup-ci
+  - pushd kong && source .ci/setup_env.sh && popd
+  - pushd kong && make dev && popd
 
 stages:
   - lint and unit
@@ -71,10 +55,10 @@ jobs:
   include:
     - stage: lint and unit
       script:
-      - pushd $KONG_DOWNLOAD && luacheck -q . && popd
-      - pushd $KONG_DOWNLOAD && bin/busted -v -o gtest spec/01-unit && popd
+      - pushd kong && luacheck -q . && popd
+      - pushd kong && bin/busted -v -o gtest spec/01-unit && popd
       env:
         - KONG_DATABASE=none
 
 script:
-  - .ci/run_tests.sh
+  - pushd kong && .ci/run_tests.sh
