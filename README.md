@@ -19,16 +19,17 @@ get them applied to other versions:
 * `1.13.6.1`
 * `1.13.6.2`
 * `1.15.8.1`
+* `1.15.8.2`
 
 Here are the instructions on how to build OpenResty with patches added to
-OpenResty version `1.15.8.1`:
+OpenResty version `1.15.8.2`:
 ```bash
-wget https://openresty.org/download/openresty-1.15.8.1.tar.gz
-tar zxvf openresty-1.15.8.1.tar.gz
+wget https://openresty.org/download/openresty-1.15.8.2.tar.gz
+tar zxvf openresty-1.15.8.2.tar.gz
 wget https://github.com/Kong/openresty-patches/archive/master.tar.gz
 tar zxvf master.tar.gz
-cd openresty-1.15.8.1/bundle
-for i in ../../openresty-patches-master/patches/1.15.8.1/*.patch; do patch -p1 < $i; done
+cd openresty-1.15.8.2/bundle
+for i in ../../openresty-patches-master/patches/1.15.8.2/*.patch; do patch -p1 < $i; done
 ```
 And the output should contain:
 
