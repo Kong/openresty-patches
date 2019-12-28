@@ -1,3 +1,10 @@
+# !!!WARNING!!!
+
+This repository has been deprecated and is in readonly mode. Do not submit
+any PR or issues to this repository! The patches are maintained in
+the [kong-build-tools](https://github.com/Kong/kong-build-tools) repository
+instead.
+
 # OpenResty Patches for Kong
 
 This repository contains patches for OpenResty to be included in Kong
